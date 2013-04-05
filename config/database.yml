@@ -1,0 +1,23 @@
+development:
+  adapter: mysql2
+  host: localhost
+  username: ruby
+  password: ruby
+  database: sample_app
+  port: 3306
+
+test:
+  adapter: mysql2
+  host: localhost
+  username: ruby
+  password: ruby
+  database: sample_app
+  port: 3306
+  
+production:
+  adapter: mysql2
+  host: mysqlsrv.comapps.net
+  username: DBAdmin
+  password: SandyG67
+  database: sample_app
+  port: 3306
