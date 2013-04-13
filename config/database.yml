@@ -11,7 +11,7 @@ test:
   host: localhost
   username: ruby
   password: ruby
-  database: sample_app
+  database: sample_app_test
   port: 3306
   
 production:
