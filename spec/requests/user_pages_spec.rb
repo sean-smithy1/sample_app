@@ -2,11 +2,27 @@ require 'spec_helper'
 
 describe "User pages" do
 
- subject { page }
+subject { page }
+let(:user) { FactoryGirl.create(:user) }
+
+  describe "profile page" do
+    let(:user) { FactoryGirl.create(:user) }
+    let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "Foo") }
+    let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "Bar") }
+
+    before { visit user_path(user) }
+
+    it { should have_selector('h1',    text: user.name) }
+    it { should have_selector('title', text: user.name) }
+
+    describe "microposts" do
+      it { should have_content(m1.content) }
+      it { should have_content(m2.content) }
+      it { should have_content(user.microposts.count) }
+    end
+  end
 
   describe "index" do
-
-    let(:user) { FactoryGirl.create(:user) }
 
     before do
       sign_in user
@@ -14,7 +30,12 @@ describe "User pages" do
     end
 
     it { should have_selector('title', text: 'All users') }
-    it { should have_selector('h1',    text: 'All users') }
+
+    it "should list each user" do
+      User.all.each do |user|
+        page.should have_selector('li', text: user.name)
+      end
+    end
 
     describe "pagination" do
 
@@ -48,13 +69,6 @@ describe "User pages" do
         it { should_not have_link('delete', href: user_path(admin)) }
       end
     end
-
- describe "profile page" do
-    let(:user) { FactoryGirl.create(:user) }
-    before { visit user_path(user) }
-
-    it { should have_selector('h1',    text: user.name) }
-    it { should have_selector('title', text: user.name) }
   end
 
   describe "signup page" do
@@ -62,6 +76,14 @@ describe "User pages" do
 
     it { should have_selector('h1',    text: 'Sign up') }
     it { should have_selector('title', text: full_title('Sign up')) }
+  end
+
+ describe "profile page" do
+    let(:user) { FactoryGirl.create(:user) }
+    before { visit user_path(user) }
+
+    it { should have_selector('h1',    text: user.name) }
+    it { should have_selector('title', text: user.name) }
   end
 
 describe "signup" do
@@ -105,8 +127,8 @@ describe "signup" do
 
     describe "with invalid information" do
       before { click_button "Save changes" }
-
       it { should have_content('error') }
+    end
 
     describe "with valid information" do
       let(:new_name)  { "New Name" }
@@ -124,9 +146,8 @@ describe "signup" do
       it { should have_link('Sign out', href: signout_path) }
       specify { user.reload.name.should  == new_name }
       specify { user.reload.email.should == new_email }
-
       end
-    end
+
   end
 end
-end
+
