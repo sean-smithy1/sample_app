@@ -140,7 +140,7 @@ end
     it { should be_admin }
   end
 
-describe "micropost associations" do
+  describe "micropost associations" do
 
     before { @user.save }
     let!(:older_micropost) do 
@@ -161,6 +161,16 @@ describe "micropost associations" do
       microposts.each do |micropost|
         Micropost.find_by_id(micropost.id).should be_nil
       end
+    end
+  
+  describe "status" do
+      let(:unfollowed_post) do
+        FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))
+      end
+
+      its(:feed) { should include(newer_micropost) }
+      its(:feed) { should include(older_micropost) }
+      its(:feed) { should_not include(unfollowed_post) }
     end
   end
 end
