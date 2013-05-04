@@ -34,13 +34,17 @@ class UsersController < ApplicationController
     else
       render 'edit'
     end
-
-  def destroy
-    User.find(params[:id]).destroy
-    flash[:success] = "User destroyed."
-    redirect_to users_url
   end
 
+  def destroy
+    if current_user == User.find(params[:id])
+      flash[:error] = "Sorry, you're unable to delete your own account."
+      redirect_to users_path
+    else
+      User.find(params[:id]).destroy
+      flash[:success] = "User destroyed."
+      redirect_to users_path
+    end
   end
 
   def index

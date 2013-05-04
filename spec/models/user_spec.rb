@@ -14,10 +14,10 @@ require 'spec_helper'
 
 describe User do
 
-before do
+  before do
   @user = User.new(name: "Example User", email: "user@example.com", 
                    password: "foobar", password_confirmation: "foobar")
-end
+  end
 
   subject { @user }
 
@@ -27,14 +27,14 @@ end
   it { should respond_to(:password) }
   it { should respond_to(:password_confirmation) }
   it { should respond_to(:admin) }
-  it { should respond_to(:authentiacte) }
+  it { should respond_to(:authenticate) }
   it { should respond_to(:microposts) }
-  it { should be_valid }
-  it { should_not be_admin }
-
   it { should respond_to(:password_confirmation) }
   it { should respond_to(:remember_token) }
   it { should respond_to(:authenticate) } 
+
+  it { should be_valid }
+  it { should_not be_admin }
 
   describe "when name is not present" do
     before { @user.name = " " }
@@ -80,22 +80,22 @@ end
     it { should_not be_valid }
   end
 
-describe "when password is not present" do
-  before { @user.password = @user.password_confirmation = " " }
-  it { should_not be_valid }
-end
+  describe "when password is not present" do
+    before { @user.password = @user.password_confirmation = " " }
+    it { should_not be_valid }
+  end
 
-describe "when password doesn't match confirmation" do
-  before { @user.password_confirmation = "mismatch" }
-  it { should_not be_valid }
-end
+  describe "when password doesn't match confirmation" do
+    before { @user.password_confirmation = "mismatch" }
+    it { should_not be_valid }
+  end
 
-describe "when password confirmation is nil" do
-  before { @user.password_confirmation = nil }
-  it { should_not be_valid }
-end
+  describe "when password confirmation is nil" do
+    before { @user.password_confirmation = nil }
+    it { should_not be_valid }
+  end
 
-describe "return value of authenticate method" do
+  describe "return value of authenticate method" do
   before { @user.save }
   let(:found_user) { User.find_by_email(@user.email) }
 
@@ -111,10 +111,10 @@ describe "return value of authenticate method" do
   end
 end
 
-describe "with a password that's too short" do
+  describe "with a password that's too short" do
   before { @user.password = @user.password_confirmation = "a" * 5 }
   it { should be_invalid }
-end
+  end
 
   describe "email address with mixed case" do
     let(:mixed_case_email) { "Foo@ExAMPle.CoM" }
@@ -163,7 +163,5 @@ describe "micropost associations" do
       end
     end
   end
-
-
 end
 
