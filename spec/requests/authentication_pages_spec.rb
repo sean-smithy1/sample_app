@@ -14,7 +14,7 @@ describe "Authentication" do
       it { should have_selector('h1',    text: 'Sign in') }
       it { should have_selector('title', text: 'Sign in') }
   end
-
+#--
   describe "signin" do
     before { visit signin_path }
 
@@ -41,7 +41,7 @@ describe "Authentication" do
       it { should_not have_link('Sign in', href: signin_path) }
     end
   end
-
+# --
   describe "Authorisation" do
 
     describe "as non-admin users" do
@@ -99,16 +99,38 @@ describe "Authentication" do
            it "should render the desired protected page" do
              page.should have_selector('title', text: 'Edit user')
            end
+          end
+        end
+          
+        describe "in the Relationships controller" do
+          describe "submitting to the create action" do
+            before { post relationships_path }
+            specify { response.should redirect_to(signin_path) }
+          end
+
+          describe "submitting to the destroy action" do
+            before { delete relationship_path(1) }
+            specify { response.should redirect_to(signin_path) }          
+          end
+        end
+        
+        describe "visiting the following page" do
+          before { visit following_user_path(user) }
+          it { should have_selector('title', text: 'Sign in') }
+        end
+
+        describe "visiting the followers page" do
+          before { visit followers_user_path(user) }
+          it { should have_selector('title', text: 'Sign in') }
         end
       end
-    end
 
       describe "as wrong user" do
         before { sign_in user }
 
           describe "visiting Users#edit page" do
-              before { visit edit_user_path(wrong_user) }
-              it { should_not have_selector('title', text: full_title('Edit user')) }
+            before { visit edit_user_path(wrong_user) }
+            it { should_not have_selector('title', text: full_title('Edit user')) }
           end
           describe "submitting a PUT request to the Users#update action" do
             before { put user_path(wrong_user) }
